@@ -36,3 +36,4 @@
     "types": ["node", "vite/client"]
   }
 }
+// tsconfig.json
