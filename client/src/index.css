@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* 
+      PALETTE LUBUMBASHI 
+      Orange Cuivre (#D47A1C) -> 31 76% 47%
+      Bleu Profond (#003366) -> 210 100% 20%
+      Gris Anthracite (#1D1D1F) -> 240 3% 12%
+    */
+
+    --background: 0 0% 100%; /* Blanc */
+    --foreground: 210 100% 20%; /* Texte principal en Bleu Profond pour le contraste pro */
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 100% 20%;
+    --card-border: 220 13% 91%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 100% 20%;
+    --popover-border: 220 13% 91%;
+ 
+    /* COULEUR PRIMAIRE : Orange Cuivre (Identité Visuelle) */
+    --primary: 31 76% 47%;
+    --primary-foreground: 0 0% 100%; /* Texte blanc sur orange */
+ 
+    /* COULEUR SECONDAIRE : Bleu Profond (Confiance) */
+    --secondary: 210 100% 20%;
+    --secondary-foreground: 0 0% 100%;
+ 
+    --muted: 210 20% 96%; /* Gris très clair bleuté */
+    --muted-foreground: 215 16% 47%;
+ 
+    --accent: 31 76% 96%; /* Orange très pâle pour les survols */
+    --accent-foreground: 31 76% 47%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 31 76% 47%; /* Focus ring couleur Cuivre */
+ 
+    --radius: 0.375rem; /* 6px */
+
+    /* Chart colors adaptées */
+    --chart-1: 31 76% 47%;  /* Cuivre */
+    --chart-2: 210 100% 20%; /* Bleu */
+    --chart-3: 160 100% 30%; /* Vert */
+    --chart-4: 48 100% 50%;  /* Jaune */
+    --chart-5: 27 87% 67%;
+
+    /* Sidebar colors */
+    --sidebar: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+ 
+  .dark {
+    /* Mode Sombre : Fond Gris Anthracite (#1D1D1F) */
+    --background: 240 3% 12%; 
+    --foreground: 0 0% 98%;
+ 
+    --card: 240 3% 15%;
+    --card-foreground: 0 0% 98%;
+    --card-border: 240 3.7% 15.9%;
+ 
+    --popover: 240 3% 15%;
+    --popover-foreground: 0 0% 98%;
+    --popover-border: 240 3.7% 15.9%;
+ 
+    --primary: 31 76% 47%; /* Le Cuivre reste vibrant */
+    --primary-foreground: 0 0% 100%;
+ 
+    --secondary: 210 50% 30%; /* Bleu allégé */
+    --secondary-foreground: 0 0% 98%;
+ 
+    --muted: 240 3% 20%;
+    --muted-foreground: 240 5% 64.9%;
+ 
+    --accent: 240 3% 20%;
+    --accent-foreground: 0 0% 98%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+ 
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 31 76% 47%;
+
+    --sidebar: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Montserrat', sans-serif;
+  }
+}
+
+/* Classes utilitaires personnalisées */
+@layer utilities {
+  .text-copper { color: #D47A1C; }
+  .bg-copper { background-color: #D47A1C; }
+  .text-deep-blue { color: #003366; }
+  .bg-deep-blue { background-color: #003366; }
+  
+  /* Masquer le bouton cancel moche de Chrome */
+  input[type="search"]::-webkit-search-cancel-button {
+    @apply hidden;
+  }
+}

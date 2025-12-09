@@ -1,0 +1,350 @@
+CityLinker – Plateforme numérique de connexion entreprises & clients
+🧭 Vision générale
+
+CityLinker est une plateforme numérique de mise en relation entre :
+
+entreprises
+
+prestataires
+
+clients
+
+autres acteurs locaux
+
+👉 C’est un annuaire numérique intelligent, comparable à Yelp, mais pensé pour :
+
+l’évolution,
+
+l’Afrique,
+
+les PME,
+
+et les nouveaux usages digitaux.
+
+CityLinker permet de découvrir, rechercher, évaluer et interagir avec des services proches de soi, dans un environnement simple, intuitif et sécurisé.
+
+👥 Modélisation des utilisateurs
+🔓 Utilisateur non connecté (visiteur)
+
+Un visiteur peut :
+
+Voir les annonces, services et articles publics
+
+Voir les notes ⭐
+
+Effectuer des recherches par mots-clés ou catégories
+
+Naviguer librement sur la plateforme
+
+Être incité à créer un compte pour plus d’interactions
+
+🔒 Restrictions :
+
+Ne peut pas commenter
+
+Ne peut pas noter
+
+Ne peut pas gérer de contenu
+
+🧑 Utilisateur – Client
+
+Un client inscrit peut :
+
+Voir et modifier son profil
+
+Consulter toutes les annonces, services et articles
+
+Effectuer des recherches avancées
+
+Laisser :
+
+des commentaires
+
+des notes ⭐
+
+Gérer ses informations personnelles
+
+Se déconnecter à tout moment
+
+✅ Expérience fluide, orientée découverte & interaction
+
+🏢 Utilisateur – Entreprise
+
+Une entreprise peut :
+
+Voir et modifier son profil
+
+Publier :
+
+des annonces
+
+des offres de services
+
+des articles
+
+Gérer ses publications (CRUD)
+
+Voir les avis et notes des clients
+
+Répondre aux commentaires
+
+Accéder à un dashboard avec :
+
+statistiques
+
+graphiques
+
+performances des publications
+
+⚠️ Les publications sont soumises à validation par l’administrateur.
+
+🛡️ Administrateur
+
+L’administrateur a le contrôle total :
+
+Gestion complète de la base de données
+
+CRUD sur tous les contenus
+
+Validation / rejet des :
+
+annonces
+
+services
+
+articles
+
+Gestion des utilisateurs :
+
+clients
+
+entreprises
+
+Visualisation :
+
+nombre d’utilisateurs
+
+nombre d’avis
+
+activité globale de la plateforme
+
+C’est le pilier de la qualité et de la sécurité de CityLinker.
+
+🗺️ Fonctionnement global (logique des routes & écrans)
+0️⃣ Landing Page – Page d’accueil
+
+Structure claire et moderne :
+
+🔹 Navbar
+
+Logo CityLinker
+
+Boutons :
+
+Inscription
+
+Connexion
+
+🔹 Section “À propos”
+
+Mission de la plateforme
+
+Valeur ajoutée pour entreprises et clients
+
+🔹 Contenus en tendances
+
+Annonces
+
+Services
+
+Articles populaires
+
+➡️ Boutons :
+
+“Voir plus”
+
+“Créer un compte”
+
+🔹 Catégories
+
+Filtrer les annonces par secteur
+
+🔹 Partenaires (optionnel)
+🔹 Footer (niveau 2025+)
+
+Contact
+
+Réseaux sociaux
+
+Mentions légales
+
+Politique de confidentialité
+
+Copyright
+
+1️⃣ Inscription (Sign up)
+
+Données requises :
+
+Nom
+
+Prénom
+
+Email
+
+Téléphone
+
+Type de compte :
+
+Client
+
+Entreprise
+
+Mot de passe
+
+🔮 Plus tard :
+
+Inscription via Google
+
+1.1️⃣ Connexion (Login)
+
+Connexion par :
+
+Email
+
+Mot de passe
+
+➡️ Redirection automatique selon le type de compte.
+
+🔀 Après connexion : logiques par rôle
+✅ Client connecté
+🏠 Accueil client
+
+Barre de recherche
+
+Menu déroulant (gestion du compte)
+
+Contenus en tendances
+
+Catégories
+
+📄 Page de détail (annonce/service/article)
+
+Détails complets
+
+Commentaires
+
+Notation ⭐
+
+👤 Compte client (menu)
+
+Voir / modifier infos
+
+Bouton logout → retour à la landing page
+
+🏢 Entreprise connectée
+📊 Dashboard entreprise
+
+Graphiques
+
+Statistiques
+
+Gestion des :
+
+annonces
+
+services
+
+articles
+
+Réponses aux avis clients
+
+🌍 Contenus des autres entreprises
+
+Consultation uniquement
+
+Pas de commentaires ni notation
+
+🛡️ Administrateur connecté
+🎛️ Dashboard admin
+
+Vue globale
+
+Contrôle total
+
+Validation des contenus
+
+Gestion utilisateurs
+
+✅ Avis général sur le projet
+
+🔥 Très solide
+✅ Logique métier claire
+✅ Cas d’usage réaliste
+✅ Architecture évolutive
+✅ Fort potentiel économique
+
+CityLinker n’est pas un simple projet étudiant, c’est :
+
+👉 un produit digital prêt à évoluer vers une startup
+
+🚀 Recommandations pour un projet “2035-ready”
+🔮 Vision produit
+
+Plateforme pilotée par données
+
+Évolution vers un éco-système
+
+🧠 Intelligence future
+
+Suggestions automatiques de services
+
+Classement intelligent des tendances
+
+🧩 Modularité
+
+API mobile
+
+Micro-services
+
+Marketplace intégrée
+
+🎨 UI / UX
+
+Design minimaliste
+
+Animations légères
+
+Expérience ultra fluide
+
+Dark mode
+
+🌍 Scalabilité
+
+Support multi-villes
+
+Multi-langues
+
+Monétisation progressive
+
+🏁 Conclusion
+
+✅ CityLinker est :
+
+cohérent
+
+ambitieux
+
+pertinent
+
+professionnel
+
+💡 Avec ce projet, tu démontres :
+
+maîtrise fonctionnelle
+
+pensée produit
+
+vision long terme
+
+logique entrepreneuriale
