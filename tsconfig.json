@@ -1,17 +1,22 @@
 {
-  "include": ["client/src/**/*", "shared/**/*", "server/**/*"],
+  "include": [
+    "client/src/**/*",
+    "shared/**/*",
+    "server/**/*",
+    "api/**/*" 
+  ],
   "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
     "noEmit": true,
-    
+
     /* Modernisation et compatibilité */
     "module": "ESNext",
     "moduleResolution": "bundler",
     "target": "ES2020",
-    "jsx": "react-jsx", /* Plus moderne que "preserve" pour Vite */
-    
+    "jsx": "react-jsx",
+
     /* Sécurité du code */
     "strict": true,
     "esModuleInterop": true,
@@ -19,21 +24,20 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    
+
     /* CORRECTION 1 : Indispensable pour Windows -> Linux */
-    "forceConsistentCasingInFileNames": true, 
-    
+    "forceConsistentCasingInFileNames": true,
+
     /* CORRECTION 2 : Calmer l'erreur sur baseUrl */
     "ignoreDeprecations": "6.0",
-    
+
     /* Alias de chemins */
     "baseUrl": ".",
     "paths": {
       "@/*": ["./client/src/*"],
       "@shared/*": ["./shared/*"]
     },
-    
+
     "types": ["node", "vite/client"]
   }
 }
-// tsconfig.json

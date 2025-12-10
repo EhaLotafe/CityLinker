@@ -287,6 +287,9 @@ export default function LandingPage() {
               >
                 <Link href="/register?role=business">Je suis une entreprise</Link>
               </Button>
+              <div className="hidden md:flex items-center justify-center bg-white/5 rounded-full p-12 backdrop-blur-sm border border-white/10">
+              <Star className="h-32 w-32 text-lubumbashi-yellow opacity-80" />
+            </div>
             </div>
           </div>
         </section>

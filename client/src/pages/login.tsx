@@ -1,4 +1,3 @@
-//client/src/pages/login.tsx
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useForm } from "react-hook-form";
@@ -40,13 +39,14 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       const response = await apiRequest("POST", "/api/auth/login", data);
-      const result = await response.json();
       
       if (response.ok) {
+        const result = await response.json();
         setUser(result.user);
         toast({
           title: "Connexion réussie",
-          description: `Bienvenue, ${result.user.firstName} !`,
+          description: `Ravi de vous revoir, ${result.user.firstName} !`,
+          className: "bg-green-50 border-green-200 text-green-800",
         });
         
         if (result.user.role === "admin") {
@@ -57,16 +57,17 @@ export default function LoginPage() {
           setLocation("/home");
         }
       } else {
+        const errorData = await response.json();
         toast({
-          title: "Erreur de connexion",
-          description: result.message || "Email ou mot de passe incorrect",
+          title: "Impossible de se connecter",
+          description: errorData.message || "Email ou mot de passe incorrect",
           variant: "destructive",
         });
       }
     } catch (error) {
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue. Veuillez réessayer.",
+        title: "Erreur de connexion",
+        description: "Impossible de joindre le serveur. Vérifiez votre internet.",
         variant: "destructive",
       });
     } finally {
@@ -78,7 +79,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-background dark:to-background">
       <header className="p-4 flex items-center justify-between">
         <Link href="/">
-          <span className="text-xl font-bold tracking-tight">
+          <span className="text-xl font-bold tracking-tight cursor-pointer">
             City<span className="text-primary">Linker</span>
           </span>
         </Link>
@@ -86,9 +87,9 @@ export default function LoginPage() {
       </header>
 
       <main className="flex-1 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold">Connexion</CardTitle>
+        <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary">
+          <CardHeader className="text-center space-y-2">
+            <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">Connexion</CardTitle>
             <CardDescription>
               Accédez à votre compte CityLinker
             </CardDescription>
@@ -107,7 +108,7 @@ export default function LoginPage() {
                           type="email"
                           placeholder="votre@email.com"
                           autoComplete="email"
-                          data-testid="input-email"
+                          className="h-11"
                           {...field}
                         />
                       </FormControl>
@@ -128,16 +129,15 @@ export default function LoginPage() {
                             type={showPassword ? "text" : "password"}
                             placeholder="Votre mot de passe"
                             autoComplete="current-password"
-                            data-testid="input-password"
+                            className="h-11 pr-10"
                             {...field}
                           />
                           <Button
                             type="button"
                             variant="ghost"
                             size="icon"
-                            className="absolute right-0 top-0 h-full px-3"
+                            className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
                             onClick={() => setShowPassword(!showPassword)}
-                            data-testid="button-toggle-password"
                           >
                             {showPassword ? (
                               <EyeOff className="h-4 w-4 text-muted-foreground" />
@@ -154,9 +154,8 @@ export default function LoginPage() {
 
                 <Button
                   type="submit"
-                  className="w-full"
+                  className="w-full h-11 text-base font-medium mt-2"
                   disabled={isLoading}
-                  data-testid="button-login"
                 >
                   {isLoading ? (
                     <>
@@ -172,12 +171,10 @@ export default function LoginPage() {
 
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">Pas encore de compte ?</span>{" "}
-              <Link
-                href="/register"
-                className="text-primary font-medium hover:underline"
-                data-testid="link-register"
-              >
-                Créer un compte
+              <Link href="/register">
+                <span className="text-primary font-semibold hover:underline cursor-pointer">
+                  Créer un compte
+                </span>
               </Link>
             </div>
           </CardContent>

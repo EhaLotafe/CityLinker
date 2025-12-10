@@ -64,19 +64,25 @@ export async function registerRoutes(
   );
 
   // 1. AUTHENTIFICATION
+  // ... (début du fichier inchangé)
+
+  // 1. AUTHENTIFICATION
   app.post("/api/auth/register", async (req, res) => {
     try {
       const result = registerSchema.safeParse(req.body);
       if (!result.success) {
+        // On renvoie la première erreur de validation rencontrée
         return res.status(400).json({ message: result.error.errors[0].message });
       }
 
-      // Typage explicite pour éviter l'erreur "unknown"
       const data = result.data as RegisterInput;
 
+      // Vérification doublon
       const existingUser = await storage.getUserByEmail(data.email);
       if (existingUser) {
-        return res.status(400).json({ message: "Cet email est déjà utilisé" });
+        return res.status(409).json({ 
+          message: "Cette adresse email est déjà associée à un compte. Veuillez vous connecter." 
+        });
       }
 
       const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -91,7 +97,7 @@ export async function registerRoutes(
       res.status(201).json({ user: userWithoutPassword });
     } catch (error) {
       console.error("Register error:", error);
-      res.status(500).json({ message: "Erreur lors de l'inscription" });
+      res.status(500).json({ message: "Une erreur technique est survenue. Veuillez réessayer plus tard." });
     }
   });
 
@@ -99,19 +105,21 @@ export async function registerRoutes(
     try {
       const result = loginSchema.safeParse(req.body);
       if (!result.success) {
-        return res.status(400).json({ message: result.error.errors[0].message });
+        return res.status(400).json({ message: "Données incomplètes. Vérifiez votre email et mot de passe." });
       }
 
       const data = result.data as LoginInput;
 
       const user = await storage.getUserByEmail(data.email);
+      
+      // Sécurité : Message générique pour ne pas dire si l'email existe ou non
       if (!user) {
-        return res.status(401).json({ message: "Email ou mot de passe incorrect" });
+        return res.status(401).json({ message: "Adresse email ou mot de passe incorrect." });
       }
 
       const validPassword = await bcrypt.compare(data.password, user.password);
       if (!validPassword) {
-        return res.status(401).json({ message: "Email ou mot de passe incorrect" });
+        return res.status(401).json({ message: "Adresse email ou mot de passe incorrect." });
       }
 
       const { password: _, ...userWithoutPassword } = user;
@@ -120,7 +128,7 @@ export async function registerRoutes(
       res.json({ user: userWithoutPassword });
     } catch (error) {
       console.error("Login error:", error);
-      res.status(500).json({ message: "Erreur lors de la connexion" });
+      res.status(500).json({ message: "Erreur de connexion au serveur. Réessayez dans un instant." });
     }
   });
 

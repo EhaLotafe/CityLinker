@@ -191,21 +191,36 @@ export const insertReviewSchema = createInsertSchema(reviews).omit({
 });
 
 /**
- * LOGIN / REGISTER ZOD
+ * LOGIN / REGISTER ZOD SCHEMAS
+ * Messages d'erreurs personnalisés en Français
  */
 export const loginSchema = z.object({
-  email: z.string().email("Email invalide"),
-  password: z.string().min(6),
+  email: z.string()
+    .min(1, "L'email est requis")
+    .email("Veuillez entrer une adresse email valide"),
+  password: z.string()
+    .min(1, "Le mot de passe est requis"),
 });
 
 export const registerSchema = insertUserSchema.extend({
-  email: z.string().email("Email invalide"),
-  password: z.string().min(6),
-  firstName: z.string().min(2),
-  lastName: z.string().min(2),
+  email: z.string()
+    .min(1, "L'email est requis")
+    .email("Format d'email invalide (ex: nom@domaine.com)"),
+  password: z.string()
+    .min(6, "Le mot de passe doit contenir au moins 6 caractères"),
+  firstName: z.string()
+    .min(2, "Le prénom doit contenir au moins 2 caractères"),
+  lastName: z.string()
+    .min(2, "Le nom doit contenir au moins 2 caractères"),
   role: z.enum(["client", "business"]),
+  // Champs optionnels
+  phone: z.string().optional(),
+  businessName: z.string().optional(),
+  businessDescription: z.string().optional(),
+  businessAddress: z.string().optional(),
+  businessPhone: z.string().optional(),
+  businessWebsite: z.string().optional(),
 });
-
 /**
  * TYPES EXPORTÉS
  */

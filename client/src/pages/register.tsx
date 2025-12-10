@@ -1,4 +1,3 @@
-//client/src/pages/register.tsx
 import { useState, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { useForm } from "react-hook-form";
@@ -58,13 +57,14 @@ export default function RegisterPage() {
     setIsLoading(true);
     try {
       const response = await apiRequest("POST", "/api/auth/register", data);
-      const result = await response.json();
       
       if (response.ok) {
+        const result = await response.json();
         setUser(result.user);
         toast({
-          title: "Compte créé avec succès",
-          description: `Bienvenue sur CityLinker, ${result.user.firstName} !`,
+          title: "Bienvenue sur CityLinker !",
+          description: "Votre compte a été créé avec succès.",
+          className: "bg-green-50 border-green-200 text-green-800",
         });
         
         if (result.user.role === "business") {
@@ -73,16 +73,17 @@ export default function RegisterPage() {
           setLocation("/home");
         }
       } else {
+        const errorData = await response.json();
         toast({
           title: "Erreur d'inscription",
-          description: result.message || "Une erreur est survenue",
+          description: errorData.message || "Une erreur est survenue",
           variant: "destructive",
         });
       }
     } catch (error) {
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue. Veuillez réessayer.",
+        title: "Problème technique",
+        description: "Impossible de joindre le serveur. Vérifiez votre connexion.",
         variant: "destructive",
       });
     } finally {
@@ -94,7 +95,7 @@ export default function RegisterPage() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-background dark:to-background">
       <header className="p-4 flex items-center justify-between">
         <Link href="/">
-          <span className="text-xl font-bold tracking-tight">
+          <span className="text-xl font-bold tracking-tight cursor-pointer">
             City<span className="text-primary">Linker</span>
           </span>
         </Link>
@@ -102,9 +103,9 @@ export default function RegisterPage() {
       </header>
 
       <main className="flex-1 flex items-center justify-center p-4 py-8">
-        <Card className="w-full max-w-lg">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold">Créer un compte</CardTitle>
+        <Card className="w-full max-w-lg shadow-xl border-t-4 border-t-primary">
+          <CardHeader className="text-center space-y-2">
+            <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">Créer un compte</CardTitle>
             <CardDescription>
               Rejoignez CityLinker et connectez-vous aux meilleurs services
             </CardDescription>
@@ -115,32 +116,30 @@ export default function RegisterPage() {
                 type="button"
                 variant={selectedRole === "client" ? "default" : "outline"}
                 className={cn(
-                  "h-auto py-4 flex flex-col items-center gap-2",
-                  selectedRole === "client" && "ring-2 ring-primary ring-offset-2"
+                  "h-auto py-4 flex flex-col items-center gap-2 transition-all",
+                  selectedRole === "client" && "ring-2 ring-primary ring-offset-2 scale-[1.02]"
                 )}
                 onClick={() => setSelectedRole("client")}
-                data-testid="button-role-client"
               >
                 <User className="h-6 w-6" />
                 <div className="text-center">
-                  <div className="font-medium">Client</div>
-                  <div className="text-xs opacity-80">Je cherche des services</div>
+                  <div className="font-bold">Client</div>
+                  <div className="text-xs opacity-80 font-normal">Je cherche des services</div>
                 </div>
               </Button>
               <Button
                 type="button"
                 variant={selectedRole === "business" ? "default" : "outline"}
                 className={cn(
-                  "h-auto py-4 flex flex-col items-center gap-2",
-                  selectedRole === "business" && "ring-2 ring-primary ring-offset-2"
+                  "h-auto py-4 flex flex-col items-center gap-2 transition-all",
+                  selectedRole === "business" && "ring-2 ring-primary ring-offset-2 scale-[1.02]"
                 )}
                 onClick={() => setSelectedRole("business")}
-                data-testid="button-role-business"
               >
                 <Building2 className="h-6 w-6" />
                 <div className="text-center">
-                  <div className="font-medium">Entreprise</div>
-                  <div className="text-xs opacity-80">Je propose des services</div>
+                  <div className="font-bold">Entreprise</div>
+                  <div className="text-xs opacity-80 font-normal">Je propose des services</div>
                 </div>
               </Button>
             </div>
@@ -155,11 +154,7 @@ export default function RegisterPage() {
                       <FormItem>
                         <FormLabel>Prénom</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="Jean"
-                            data-testid="input-firstname"
-                            {...field}
-                          />
+                          <Input placeholder="Jean" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -173,11 +168,7 @@ export default function RegisterPage() {
                       <FormItem>
                         <FormLabel>Nom</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="Dupont"
-                            data-testid="input-lastname"
-                            {...field}
-                          />
+                          <Input placeholder="Dupont" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -192,13 +183,7 @@ export default function RegisterPage() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="votre@email.com"
-                          autoComplete="email"
-                          data-testid="input-email"
-                          {...field}
-                        />
+                        <Input type="email" placeholder="votre@email.com" autoComplete="email" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -212,11 +197,9 @@ export default function RegisterPage() {
                       <FormItem>
                         <FormLabel>Téléphone (optionnel)</FormLabel>
                         <FormControl>
-                          {/* CORRECTION ICI : value={field.value || ""} */}
                           <Input
                             type="tel"
                             placeholder="+243 00 00 00 00"
-                            data-testid="input-phone"
                             {...field}
                             value={field.value || ""} 
                           />
@@ -238,14 +221,14 @@ export default function RegisterPage() {
                             type={showPassword ? "text" : "password"}
                             placeholder="Minimum 6 caractères"
                             autoComplete="new-password"
-                            data-testid="input-password"
+                            className="pr-10"
                             {...field}
                           />
                           <Button
                             type="button"
                             variant="ghost"
                             size="icon"
-                            className="absolute right-0 top-0 h-full px-3"
+                            className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
                             onClick={() => setShowPassword(!showPassword)}
                           >
                             {showPassword ? (
@@ -262,7 +245,8 @@ export default function RegisterPage() {
                 />
 
                 {selectedRole === "business" && (
-                  <>
+                  <div className="space-y-4 pt-4 border-t border-gray-100 mt-4">
+                      <div className="text-sm font-semibold text-primary">Informations Professionnelles</div>
                       <FormField
                           control={form.control}
                           name="businessName"
@@ -270,10 +254,8 @@ export default function RegisterPage() {
                             <FormItem>
                               <FormLabel>Nom de l'entreprise</FormLabel>
                               <FormControl>
-                                {/* CORRECTION ICI */}
                                 <Input
                                   placeholder="Ma Super Entreprise"
-                                  data-testid="input-business-name"
                                   {...field}
                                   value={field.value || ""}
                                 />
@@ -290,10 +272,8 @@ export default function RegisterPage() {
                               <FormItem>
                                 <FormLabel>Description (optionnel)</FormLabel>
                                 <FormControl>
-                                  {/* CORRECTION ICI */}
                                   <Input
                                     placeholder="Décrivez votre activité en quelques mots"
-                                    data-testid="input-business-description"
                                     {...field}
                                     value={field.value || ""}
                                   />
@@ -302,14 +282,13 @@ export default function RegisterPage() {
                               </FormItem>
                             )}
                           />
-                  </>
+                  </div>
                 )}
 
                 <Button
                   type="submit"
-                  className="w-full"
+                  className="w-full h-11 text-base font-medium mt-4"
                   disabled={isLoading}
-                  data-testid="button-register"
                 >
                   {isLoading ? (
                     <>
@@ -325,12 +304,10 @@ export default function RegisterPage() {
 
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">Déjà un compte ?</span>{" "}
-              <Link
-                href="/login"
-                className="text-primary font-medium hover:underline"
-                data-testid="link-login"
-              >
-                Se connecter
+              <Link href="/login">
+                <span className="text-primary font-semibold hover:underline cursor-pointer">
+                  Se connecter
+                </span>
               </Link>
             </div>
           </CardContent>
