@@ -1,17 +1,46 @@
-// server/routes.ts
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
-import session from "express-session";
-import { storage } from "./storage";
-import { 
-  loginSchema, 
-  registerSchema, 
-  insertPublicationSchema, 
+import { db } from "./db"; // Local
+import { storage } from "./storage"; // Local
+import {
+  users,
+  publications,
+  categories,
+  reviews,
+  registerSchema,
+  loginSchema,
+  insertPublicationSchema,
   insertReviewSchema,
   type RegisterInput,
   type LoginInput
-} from "@shared/schema";
+} from "../shared/schema"; // Remonte d'un cran
+import { eq, and, desc, sql } from "drizzle-orm";
+import session from "express-session";
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+import { scrypt, randomBytes, timingSafeEqual } from "crypto";
+import { promisify } from "util";
+import MemoryStore from "memorystore";
 import bcrypt from "bcrypt";
+
+
+const scryptAsync = promisify(scrypt);
+const SessionStore = MemoryStore(session);
+
+// --- AUTH HELPERS ---
+async function hashPassword(password: string) {
+  const salt = randomBytes(16).toString("hex");
+  const derivedKey = (await scryptAsync(password, salt, 64)) as Buffer;
+  return `${salt}:${derivedKey.toString("hex")}`;
+}
+
+async function comparePasswords(password: string, hash: string) {
+  const [salt, key] = hash.split(":");
+  const keyBuffer = Buffer.from(key, "hex");
+  const derivedKey = (await scryptAsync(password, salt, 64)) as Buffer;
+  return timingSafeEqual(keyBuffer, derivedKey);
+}
+
 
 // Extension du type Session pour inclure userId
 declare module "express-session" {
