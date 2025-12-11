@@ -1,7 +1,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { db } from "./db"; // Local
-import { storage } from "./storage"; // Local
+import { storage } from "./storage.js"; // Local
 import {
   users,
   publications,
@@ -13,7 +13,7 @@ import {
   insertReviewSchema,
   type RegisterInput,
   type LoginInput
-} from "../shared/schema"; // Remonte d'un cran
+} from "../shared/schema.js"; // Remonte d'un cran
 import { eq, and, desc, sql } from "drizzle-orm";
 import session from "express-session";
 import passport from "passport";

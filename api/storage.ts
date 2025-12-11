@@ -13,7 +13,7 @@ import {
   type InsertReview,
   type PublicationWithDetails,
   type ReviewWithUser,
-} from "../shared/schema"; // Remonte d'un cran
+} from "../shared/schema.js"; // Remonte d'un cran
 import { db } from "./db"; // Import local (même dossier)
 import { eq, desc, and, sql, ilike, or } from "drizzle-orm";
 

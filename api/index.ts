@@ -1,6 +1,6 @@
 import { createServer } from 'http';
 import express from 'express';
-import { registerRoutes } from './routes'; // Import LOCAL (c'est ça qui répare l'erreur)
+import { registerRoutes } from './routes.js'; // Import LOCAL (c'est ça qui répare l'erreur)
 
 const app = express();
 const httpServer = createServer(app);
