@@ -128,11 +128,13 @@
 //   process.exit(1);
 // });
 // Note: The above seed file is commented out to prevent accidental execution.
-import { db } from "./db";
+// CORRECTION ICI : On pointe vers api/db et non ./db
+import { db } from "../api/db"; 
 import { users, categories, publications } from "@shared/schema";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
 
+// ... le reste du fichier seed.ts reste identique ...
 async function seed() {
   console.log("🌱 Seeding database for Lubumbashi context...");
 
