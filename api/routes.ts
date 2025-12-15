@@ -1,7 +1,8 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
-import { db } from "./db.js"; // Local
-import { storage } from "./storage.js"; // Local
+// Imports locaux avec .js (OBLIGATOIRE POUR VERCEL)
+import { db, pool } from "./db.js"; 
+import { storage } from "./storage.js"; 
 import {
   users,
   publications,
@@ -13,19 +14,20 @@ import {
   insertReviewSchema,
   type RegisterInput,
   type LoginInput
-} from "../shared/schema.js"; // Remonte d'un cran
+} from "../shared/schema.js"; // Remonte d'un cran + .js
+
 import { eq, and, desc, sql } from "drizzle-orm";
 import session from "express-session";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
-import MemoryStore from "memorystore";
+import connectPgSimple from "connect-pg-simple";
 import bcrypt from "bcrypt";
 
-
 const scryptAsync = promisify(scrypt);
-const SessionStore = MemoryStore(session);
+// Configuration du stockage de session en base de données (Postgres)
+const PgSessionStore = connectPgSimple(session);
 
 // --- AUTH HELPERS ---
 async function hashPassword(password: string) {
@@ -41,7 +43,6 @@ async function comparePasswords(password: string, hash: string) {
   return timingSafeEqual(keyBuffer, derivedKey);
 }
 
-
 // Extension du type Session pour inclure userId
 declare module "express-session" {
   interface SessionData {
@@ -50,7 +51,6 @@ declare module "express-session" {
 }
 
 // --- MIDDLEWARES ---
-
 const requireAuth = (req: Request, res: Response, next: NextFunction) => {
   if (!req.session.userId) {
     return res.status(401).json({ message: "Non authentifié" });
@@ -72,35 +72,37 @@ const requireRole = (...roles: string[]) => {
 };
 
 // --- ROUTES ---
-
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
   
-  // Configuration de la session
+  // CONFIGURATION SESSION ROBUSTE (POUR VERCEL)
+  // Utilise la base de données pour stocker les sessions au lieu de la RAM
   app.use(
     session({
+      store: new PgSessionStore({
+        pool: pool,               // Utilise la connexion exportée de db.ts
+        tableName: 'session',     // Nom de la table dans Supabase
+        createTableIfMissing: true // Crée la table automatiquement si absente
+      }),
       secret: process.env.SESSION_SECRET || "citylinker-secret-key",
       resave: false,
       saveUninitialized: false,
       cookie: {
-        secure: process.env.NODE_ENV === "production",
+        secure: process.env.NODE_ENV === "production", // Secure en prod (https)
         httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 1 semaine
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 jours
+        sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax' // Important pour cross-site/Vercel
       },
     })
   );
-
-  // 1. AUTHENTIFICATION
-  // ... (début du fichier inchangé)
 
   // 1. AUTHENTIFICATION
   app.post("/api/auth/register", async (req, res) => {
     try {
       const result = registerSchema.safeParse(req.body);
       if (!result.success) {
-        // On renvoie la première erreur de validation rencontrée
         return res.status(400).json({ message: result.error.errors[0].message });
       }
 
@@ -123,10 +125,18 @@ export async function registerRoutes(
       const { password: _, ...userWithoutPassword } = user;
       req.session.userId = user.id;
 
-      res.status(201).json({ user: userWithoutPassword });
+      // On force la sauvegarde de la session avant de répondre
+      req.session.save((err) => {
+        if (err) {
+          console.error("Session save error:", err);
+          return res.status(500).json({ message: "Erreur de session" });
+        }
+        res.status(201).json({ user: userWithoutPassword });
+      });
+
     } catch (error) {
       console.error("Register error:", error);
-      res.status(500).json({ message: "Une erreur technique est survenue. Veuillez réessayer plus tard." });
+      res.status(500).json({ message: "Une erreur technique est survenue." });
     }
   });
 
@@ -134,14 +144,12 @@ export async function registerRoutes(
     try {
       const result = loginSchema.safeParse(req.body);
       if (!result.success) {
-        return res.status(400).json({ message: "Données incomplètes. Vérifiez votre email et mot de passe." });
+        return res.status(400).json({ message: "Données incomplètes." });
       }
 
       const data = result.data as LoginInput;
-
       const user = await storage.getUserByEmail(data.email);
       
-      // Sécurité : Message générique pour ne pas dire si l'email existe ou non
       if (!user) {
         return res.status(401).json({ message: "Adresse email ou mot de passe incorrect." });
       }
@@ -154,10 +162,17 @@ export async function registerRoutes(
       const { password: _, ...userWithoutPassword } = user;
       req.session.userId = user.id;
 
-      res.json({ user: userWithoutPassword });
+      req.session.save((err) => {
+        if (err) {
+          console.error("Session save error:", err);
+          return res.status(500).json({ message: "Erreur de session" });
+        }
+        res.json({ user: userWithoutPassword });
+      });
+
     } catch (error) {
       console.error("Login error:", error);
-      res.status(500).json({ message: "Erreur de connexion au serveur. Réessayez dans un instant." });
+      res.status(500).json({ message: "Erreur de connexion au serveur." });
     }
   });
 
@@ -166,6 +181,7 @@ export async function registerRoutes(
       if (err) {
         return res.status(500).json({ message: "Erreur lors de la déconnexion" });
       }
+      res.clearCookie("connect.sid"); // Nettoie le cookie côté client
       res.json({ message: "Déconnecté avec succès" });
     });
   });
@@ -442,7 +458,7 @@ export async function registerRoutes(
       console.error("Update status error:", error);
       res.status(500).json({ message: "Erreur lors de la mise à jour du statut" });
     }
-  }); // <-- Fermeture corrigée ici
+  });
 
   // Modification d'un utilisateur par l'Admin
   app.patch("/api/admin/users/:id", requireAuth, requireRole("admin"), async (req, res) => {
@@ -473,7 +489,6 @@ export async function registerRoutes(
           return res.status(403).json({ message: "Impossible de supprimer votre propre compte Admin" });
       }
 
-      // NOTE: Assurez-vous que deleteUser est implémenté dans storage.ts
       if (storage.deleteUser) {
         await storage.deleteUser(id);
         res.json({ message: "Utilisateur supprimé" });

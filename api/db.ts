@@ -1,15 +1,14 @@
-// api/db.ts
 import "dotenv/config"; 
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-// CORRECTION CRITIQUE : Ajout de .js pour que Vercel trouve le fichier
 import * as schema from "../shared/schema.js"; 
 
 if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL must be set");
 }
 
-const pool = new Pool({
+// AJOUT DE 'export' ICI 👇 (Indispensable pour les sessions)
+export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   // SSL obligatoire pour Supabase en production
   ssl: { rejectUnauthorized: false },
