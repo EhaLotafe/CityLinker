@@ -14,7 +14,7 @@ import {
   type PublicationWithDetails,
   type ReviewWithUser,
 } from "../shared/schema.js"; // Remonte d'un cran
-import { db } from "./db"; // Import local (même dossier)
+import { db } from "./db.js"; // Import local (même dossier)
 import { eq, desc, and, sql, ilike, or } from "drizzle-orm";
 
 

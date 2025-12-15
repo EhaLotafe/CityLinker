@@ -1,6 +1,6 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
-import { db } from "./db"; // Local
+import { db } from "./db.js"; // Local
 import { storage } from "./storage.js"; // Local
 import {
   users,
